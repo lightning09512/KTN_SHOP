@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Danh mục: ' + ${category.name}"></title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="fragments/layout :: header"></div>
+
+    <div class="product-detail-container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" style="margin-bottom: 20px;">
+            <ol class="breadcrumb" style="margin:0;">
+                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                <li class="breadcrumb-item active" th:text="${category.name}"></li>
+            </ol>
+        </nav>
+
+        <!-- Category Hero Banner -->
+        <div class="main-image" style="margin-bottom: 24px;">
+            <img th:src="${category.image}" th:alt="${category.name}" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+
+        <!-- Sidebar + Products Grid -->
+        <div class="detail-wrapper">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h5 class="sidebar-title">DANH MỤC SẢN PHẨM</h5>
+                <ul class="sidebar-list">
+                    <li class="sidebar-item" th:each="cat : ${categories}">
+                        <a th:href="@{/category/{slug}(slug=${cat.slug})}" class="sidebar-link">
+                            <span th:text="${cat.name}"></span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- Products Grid -->
+            <section>
+                <h3 class="section-title" th:text="'📦 ' + ${category.name}"></h3>
+                <div class="products-grid">
+                    <th:block th:if="${products.size() > 0}">
+                        <th:block th:each="product : ${products}">
+                            <div class="product-card">
+                                <div class="product-image-wrapper">
+                                    <img th:src="${product.image}" th:alt="${product.name}" class="product-image">
+                                    <button class="quick-view-btn" th:onclick="|openQuickView(${product.id}, '${product.name}', '${product.image}', '${product.sellingPrice}')|">
+                                        <i class="fas fa-eye"></i> Xem nhanh
+                                    </button>
+                                </div>
+                                <div class="product-info">
+                                    <h5 class="product-name" th:text="${product.name}"></h5>
+                                    <div class="product-price">
+                                        <span class="product-price-old" th:text="${product.originalPrice}"></span>
+                                        <span class="product-price-new" th:text="${product.sellingPrice}"></span>
+                                    </div>
+                                    <div class="product-action">
+                                        <a th:href="@{/products/{slug}(slug=${product.slug})}" class="btn-add-cart">
+                                            <i class="fas fa-eye"></i> Xem chi tiết
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+                    </th:block>
+                    <div th:if="${products.size() == 0}" class="alert alert-info w-100">Không tìm thấy sản phẩm nào.</div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="newsletter-section">
+        <div class="newsletter-container">
+            <h3 class="newsletter-title">Đăng ký nhận bản tin</h3>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Nhập email của bạn..." required>
+                <button type="submit">Đăng ký</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/layout :: footer"></div>
+
+    <!-- Modal Quick View -->
+    <div class="modal fade" id="quickViewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xem nhanh sản phẩm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img id="modalProductImage" src="" alt="Product" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <h5 id="modalProductName"></h5>
+                            <h3 id="modalProductPrice" class="text-danger"></h3>
+                            <div class="modal-action-buttons">
+                                <button class="btn-modal-cart"><i class="fas fa-shopping-cart"></i> Thêm vào giỏ</button>
+                                <button class="btn-modal-detail"><i class="fas fa-arrow-right"></i> Xem chi tiết</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>

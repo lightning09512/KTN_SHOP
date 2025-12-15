@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Sản phẩm: ' + ${product.name}"></title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="fragments/layout :: header"></div>
+
+    <div class="product-detail-container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" style="margin-bottom: 20px;">
+            <ol class="breadcrumb" style="margin:0;">
+                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/category/{slug}(slug=${product.category.slug})}" th:text="${product.category.name}"></a></li>
+                <li class="breadcrumb-item active" th:text="${product.name}"></li>
+            </ol>
+        </nav>
+
+        <!-- Detail Layout -->
+        <div class="detail-wrapper">
+            <!-- Image Section -->
+            <div class="detail-images">
+                <div class="main-image">
+                    <img id="mainProductImage" th:src="${product.image}" th:alt="${product.name}">
+                </div>
+                <div class="thumbnail-list">
+                    <div class="thumbnail-item active">
+                        <img th:src="${product.image}" th:alt="${product.name}" onclick="changeMainImage(this)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="detail-info">
+                <h1 class="detail-title" th:text="${product.name}"></h1>
+
+                <div class="detail-price-section">
+                    <span class="detail-price-old" th:text="${product.originalPrice}"></span>
+                    <span class="detail-price-new" th:text="${product.sellingPrice}"></span>
+                </div>
+
+                <!-- Quantity Control -->
+                <div style="margin: 20px 0;">
+                    <label>Số lượng:</label>
+                    <div class="quantity-input-group" style="display: flex; gap: 10px; align-items: center;">
+                        <button type="button" onclick="decreaseQuantity()" class="btn btn-secondary btn-sm">−</button>
+                        <input type="number" id="quantityInput" value="1" min="1" max="100" readonly style="width: 50px; text-align: center;">
+                        <button type="button" onclick="increaseQuantity()" class="btn btn-secondary btn-sm">+</button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="detail-action-buttons" style="display: flex; gap: 10px;">
+                    <button type="button" class="btn btn-outline-danger btn-lg flex-fill" onclick="addToCart()">
+                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                    </button>
+                    <button type="button" class="btn btn-danger btn-lg flex-fill" onclick="buyNow()">
+                        <i class="fas fa-flash"></i> Mua ngay
+                    </button>
+                </div>
+
+                <!-- Specs Table -->
+                <div class="specs-table" style="margin-top: 30px;">
+                    <h4>Thông số kỹ thuật</h4>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Danh mục</th>
+                                <td th:text="${product.category.name}"></td>
+                            </tr>
+                            <tr>
+                                <th>Giá gốc</th>
+                                <td th:text="${product.originalPrice}"></td>
+                            </tr>
+                            <tr>
+                                <th>Giá bán</th>
+                                <td th:text="${product.sellingPrice}"></td>
+                            </tr>
+                            <tr>
+                                <th>Tồn kho</th>
+                                <td th:text="${product.stockQuantity} + ' sản phẩm'"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Description -->
+                <div class="detail-description" style="margin-top: 30px;">
+                    <h4>Mô tả sản phẩm</h4>
+                    <p th:text="${product.description}"></p>
+                    <p th:text="'Shorthand: ' + ${product.shortDescription}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="newsletter-section">
+        <div class="newsletter-container">
+            <h3 class="newsletter-title">Đăng ký nhận bản tin</h3>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Nhập email của bạn..." required>
+                <button type="submit">Đăng ký</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/layout :: footer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng - KTNShop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div th:replace="fragments/layout :: header"></div>
+
+    <div class="container-fluid" style="padding: 20px;">
+        <div class="row">
+            <div class="col-lg-8">
+                <h2>Giỏ hàng của bạn</h2>
+
+                <div th:if="${cart.cartItems.isEmpty()}" class="alert alert-info" style="margin: 30px 0;">
+                    <i class="fas fa-info-circle"></i>
+                    Giỏ hàng của bạn đang trống. 
+                    <a href="/" class="alert-link">Tiếp tục mua sắm</a>
+                </div>
+
+                <div th:if="!${cart.cartItems.isEmpty()}" class="cart-items-list">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${cart.cartItems}">
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <img th:src="${item.product.image}" alt="${item.product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                            <div>
+                                                <p style="margin: 0; font-weight: 500;" th:text="${item.product.name}"></p>
+                                                <small style="color: #999;" th:text="${item.product.category.name}"></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td th:text="${#numbers.formatCurrency(item.unitPrice)}"></td>
+                                    <td>
+                                        <form th:action="@{/cart/update}" method="post" style="display: inline;">
+                                            <input type="hidden" name="cartItemId" th:value="${item.id}">
+                                            <input type="number" name="quantity" th:value="${item.quantity}" min="1" max="100" style="width: 60px; padding: 5px;">
+                                            <button type="submit" class="btn btn-sm btn-primary">Cập nhật</button>
+                                        </form>
+                                    </td>
+                                    <td th:text="${#numbers.formatCurrency(item.subtotal)}"></td>
+                                    <td>
+                                        <form th:action="@{/cart/remove}" method="post" style="display: inline;">
+                                            <input type="hidden" name="cartItemId" th:value="${item.id}">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card" style="padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4>Tổng hợp đơn hàng</h4>
+                    <hr>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>Tạm tính:</span>
+                        <strong th:text="${#numbers.formatCurrency(cart.totalPrice)}"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>Vận chuyển:</span>
+                        <strong>Miễn phí</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; padding-top: 10px; border-top: 1px solid #eee;">
+                        <span style="font-size: 16px;">Tổng cộng:</span>
+                        <strong style="font-size: 18px; color: #e74c3c;" th:text="${#numbers.formatCurrency(cart.totalPrice)}"></strong>
+                    </div>
+
+                    <div style="display: grid; gap: 10px;">
+                        <a th:if="!${cart.cartItems.isEmpty()}" href="/orders/checkout" class="btn btn-danger" style="display: block; text-align: center;">
+                            <i class="fas fa-credit-card"></i> Tiến hành thanh toán
+                        </a>
+                        <a href="/" class="btn btn-outline-secondary" style="display: block; text-align: center;">
+                            <i class="fas fa-arrow-left"></i> Tiếp tục mua sắm
+                        </a>
+                        <form th:if="!${cart.cartItems.isEmpty()}" th:action="@{/cart/clear}" method="post" style="display: block;">
+                            <button type="submit" class="btn btn-outline-danger w-100">
+                                <i class="fas fa-trash"></i> Xóa toàn bộ giỏ hàng
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/layout :: footer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>

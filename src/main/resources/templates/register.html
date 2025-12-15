@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - KTNShop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="fragments/layout :: header"></div>
+
+    <div class="container" style="max-width: 600px; margin: 40px auto;">
+        <div class="card" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
+            <div class="card-body" style="padding: 40px;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <i class="fas fa-user-plus" style="font-size: 60px; color: #e74c3c;"></i>
+                </div>
+
+                <h2 class="card-title text-center mb-4" style="color: #333;">Tạo tài khoản mới</h2>
+
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-circle"></i> 
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <form th:action="@{/auth/register}" method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fas fa-user"></i> Họ</label>
+                            <input type="text" class="form-control" name="firstName" required placeholder="Nhập họ">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fas fa-user"></i> Tên</label>
+                            <input type="text" class="form-control" name="lastName" required placeholder="Nhập tên">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-at"></i> Tên đăng nhập</label>
+                        <input type="text" class="form-control" name="username" required placeholder="Chọn tên đăng nhập">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" class="form-control" name="email" required placeholder="Nhập email của bạn">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-phone"></i> Số điện thoại</label>
+                        <input type="tel" class="form-control" name="phoneNumber" required placeholder="Nhập số điện thoại">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fas fa-lock"></i> Mật khẩu</label>
+                            <input type="password" class="form-control" name="password" required placeholder="Tối thiểu 6 ký tự">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fas fa-lock"></i> Xác nhận mật khẩu</label>
+                            <input type="password" class="form-control" name="confirmPassword" required placeholder="Nhập lại mật khẩu">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="agree" required>
+                            <label class="form-check-label" for="agree">
+                                Tôi đồng ý với <a href="#" style="color: #e74c3c; text-decoration: none;">điều khoản sử dụng</a> 
+                                và <a href="#" style="color: #e74c3c; text-decoration: none;">chính sách bảo mật</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger w-100 mb-3" style="padding: 10px; font-size: 16px; font-weight: 500;">
+                        <i class="fas fa-user-plus"></i> Đăng ký
+                    </button>
+                </form>
+
+                <hr style="margin: 20px 0;">
+
+                <p class="text-center mb-0">
+                    Đã có tài khoản? <a th:href="@{/auth/login}" style="color: #e74c3c; font-weight: 500; text-decoration: none;">Đăng nhập ngay</a>
+                </p>
+            </div>
+        </div>
+
+        <p style="text-align: center; margin-top: 20px; color: #666;">
+            <a href="/" style="color: #999; text-decoration: none;">
+                <i class="fas fa-arrow-left"></i> Quay về trang chủ
+            </a>
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/layout :: footer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết đơn hàng - KTNShop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div th:replace="fragments/layout :: header"></div>
+
+    <div class="container-fluid" style="padding: 20px; max-width: 1000px;">
+        <a href="/orders/my-orders" style="margin-bottom: 20px; display: inline-block;">
+            <i class="fas fa-arrow-left"></i> Quay lại danh sách đơn hàng
+        </a>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card" style="padding: 30px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="margin: 0;">Chi tiết đơn hàng</h2>
+                        <span th:switch="${order.status}">
+                            <span th:case="'PENDING'" class="badge bg-warning" style="padding: 8px 12px; font-size: 14px;">Chờ xác nhận</span>
+                            <span th:case="'CONFIRMED'" class="badge bg-info" style="padding: 8px 12px; font-size: 14px;">Đã xác nhận</span>
+                            <span th:case="'SHIPPING'" class="badge bg-primary" style="padding: 8px 12px; font-size: 14px;">Đang giao</span>
+                            <span th:case="'DELIVERED'" class="badge bg-success" style="padding: 8px 12px; font-size: 14px;">Đã giao</span>
+                            <span th:case="'CANCELLED'" class="badge bg-danger" style="padding: 8px 12px; font-size: 14px;">Đã hủy</span>
+                        </span>
+                    </div>
+
+                    <hr>
+
+                    <h4 style="margin-bottom: 20px;">Thông tin đơn hàng</h4>
+                    <div class="row" style="margin-bottom: 30px;">
+                        <div class="col-md-6">
+                            <p><strong>Mã đơn hàng:</strong></p>
+                            <p style="color: #e74c3c; font-size: 18px; font-weight: bold;" th:text="${order.orderNumber}"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Ngày đặt:</strong></p>
+                            <p th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></p>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-bottom: 20px;">Địa chỉ giao hàng</h4>
+                    <p style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 30px;" th:text="${order.shippingAddress}"></p>
+
+                    <div th:if="${order.notes}">
+                        <h4 style="margin-bottom: 20px;">Ghi chú</h4>
+                        <p style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 30px;" th:text="${order.notes}"></p>
+                    </div>
+
+                    <h4 style="margin-bottom: 20px;">Sản phẩm</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${order.orderItems}">
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <img th:src="${item.product.image}" th:alt="${item.product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                            <div>
+                                                <p style="margin: 0; font-weight: 500;" th:text="${item.product.name}"></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td th:text="${#numbers.formatCurrency(item.unitPrice)}"></td>
+                                    <td th:text="${item.quantity}"></td>
+                                    <td style="font-weight: bold;" th:text="${#numbers.formatCurrency(item.subtotal)}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card" style="padding: 20px; position: sticky; top: 20px;">
+                    <h4 style="margin-bottom: 20px;">Tóm tắt đơn hàng</h4>
+                    <hr>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <span>Tạm tính:</span>
+                        <strong th:text="${#numbers.formatCurrency(order.totalAmount)}"></strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <span>Vận chuyển:</span>
+                        <strong>Miễn phí</strong>
+                    </div>
+                    <hr>
+                    <div style="display: flex; justify-content: space-between; font-size: 18px;">
+                        <strong>Tổng cộng:</strong>
+                        <strong style="color: #e74c3c;" th:text="${#numbers.formatCurrency(order.totalAmount)}"></strong>
+                    </div>
+
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <h5 style="margin-bottom: 15px;">Trạng thái giao hàng</h5>
+                        <div class="timeline" style="position: relative; padding-left: 30px;">
+                            <div style="display: flex; margin-bottom: 20px;">
+                                <div style="position: absolute; left: 0; top: 0; width: 20px; height: 20px; background: #27ae60; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-check" style="color: white; font-size: 12px;"></i>
+                                </div>
+                                <div>
+                                    <p style="margin: 0; font-weight: bold;">Đơn hàng được tạo</p>
+                                    <small style="color: #999;" th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></small>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; margin-bottom: 20px;" th:classappend="${order.status.name().equals('PENDING') ? '' : 'opacity-50'}">
+                                <div style="position: absolute; left: 0; top: 60px; width: 20px; height: 20px; background: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center;" th:classappend="${!order.status.name().equals('PENDING') ? 'bg-success' : ''}">
+                                    <i th:classappend="${!order.status.name().equals('PENDING') ? 'fas fa-check' : 'fas fa-circle'}"></i>
+                                </div>
+                                <div style="margin-left: 0;">
+                                    <p style="margin: 0; font-weight: bold;">Chờ xác nhận</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${order.status.name().equals('PENDING') || order.status.name().equals('CONFIRMED')}" style="margin-top: 20px;">
+                        <form th:action="@{/orders/{id}/cancel(id=${order.id})}" method="post">
+                            <button type="submit" class="btn btn-outline-danger w-100" onclick="return confirm('Bạn chắc chắn muốn hủy đơn hàng này?')">
+                                <i class="fas fa-times"></i> Hủy đơn hàng
+                            </button>
+                        </form>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <a href="/orders/my-orders" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/layout :: footer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>

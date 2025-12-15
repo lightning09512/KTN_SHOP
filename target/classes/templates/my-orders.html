@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng của tôi - KTNShop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div th:replace="fragments/layout :: header"></div>
+
+    <div class="container-fluid" style="padding: 20px; max-width: 1000px;">
+        <h2 style="margin-bottom: 30px;">Đơn hàng của tôi</h2>
+
+        <div th:if="${orders.isEmpty()}" class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            Bạn chưa có đơn hàng nào. 
+            <a href="/" class="alert-link">Tiếp tục mua sắm</a>
+        </div>
+
+        <div th:if="!${orders.isEmpty()}" class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="order : ${orders}">
+                        <td style="font-weight: bold; color: #e74c3c;" th:text="${order.orderNumber}"></td>
+                        <td th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${#numbers.formatCurrency(order.totalAmount)}"></td>
+                        <td>
+                            <span th:switch="${order.status}">
+                                <span th:case="'PENDING'" class="badge bg-warning">Chờ xác nhận</span>
+                                <span th:case="'CONFIRMED'" class="badge bg-info">Đã xác nhận</span>
+                                <span th:case="'SHIPPING'" class="badge bg-primary">Đang giao</span>
+                                <span th:case="'DELIVERED'" class="badge bg-success">Đã giao</span>
+                                <span th:case="'CANCELLED'" class="badge bg-danger">Đã hủy</span>
+                            </span>
+                        </td>
+                        <td>
+                            <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye"></i> Chi tiết
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div th:replace="fragments/layout :: footer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>

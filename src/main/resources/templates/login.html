@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - KTNShop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="fragments/layout :: header"></div>
+
+    <div class="container" style="max-width: 500px; margin: 60px auto;">
+        <div class="card" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
+            <div class="card-body" style="padding: 40px;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <i class="fas fa-user-circle" style="font-size: 60px; color: #e74c3c;"></i>
+                </div>
+
+                <h2 class="card-title text-center mb-4" style="color: #333;">Đăng nhập</h2>
+
+                <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle"></i> 
+                    <span th:text="${param.success[0]}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-circle"></i> 
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <form th:action="@{/auth/login}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-user"></i> Tên đăng nhập</label>
+                        <input type="text" class="form-control" name="username" required placeholder="Nhập tên đăng nhập">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label"><i class="fas fa-lock"></i> Mật khẩu</label>
+                        <input type="password" class="form-control" name="password" required placeholder="Nhập mật khẩu">
+                    </div>
+
+                    <button type="submit" class="btn btn-danger w-100 mb-3" style="padding: 10px; font-size: 16px; font-weight: 500;">
+                        <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                    </button>
+                </form>
+
+                <hr style="margin: 20px 0;">
+
+                <p class="text-center mb-0">
+                    Chưa có tài khoản? <a th:href="@{/auth/register}" style="color: #e74c3c; font-weight: 500; text-decoration: none;">Đăng ký ngay</a>
+                </p>
+            </div>
+        </div>
+
+        <p style="text-align: center; margin-top: 20px; color: #666;">
+            <a href="/" style="color: #999; text-decoration: none;">
+                <i class="fas fa-arrow-left"></i> Quay về trang chủ
+            </a>
+        </p>
+    </div>
+
+    <div th:replace="fragments/layout :: footer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>
+
+    <!-- Footer -->
+    <div th:replace="fragments/layout :: footer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

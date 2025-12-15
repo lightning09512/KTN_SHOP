@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài khoản của tôi - KTNShop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div th:replace="fragments/layout :: header"></div>
+
+    <div class="container-fluid" style="padding: 20px; max-width: 1000px;">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card" style="position: sticky; top: 20px;">
+                    <div class="card-body" style="text-align: center; padding: 30px;">
+                        <i class="fas fa-user-circle" style="font-size: 80px; color: #e74c3c; display: block; margin-bottom: 15px;"></i>
+                        <h4 style="margin-bottom: 5px;" th:text="${session.currentUser.username}"></h4>
+                        <p style="color: #999; margin-bottom: 20px;" th:text="${session.currentUser.email}"></p>
+
+                        <div style="display: grid; gap: 10px;">
+                            <a href="/orders/my-orders" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-list"></i> Đơn hàng của tôi
+                            </a>
+                            <a href="/account/edit" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-edit"></i> Chỉnh sửa thông tin
+                            </a>
+                            <a href="/account/change-password" class="btn btn-outline-warning btn-sm">
+                                <i class="fas fa-key"></i> Đổi mật khẩu
+                            </a>
+                            <a href="/auth/logout" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="card" style="margin-bottom: 20px;">
+                    <div class="card-header" style="background: #f8f9fa; padding: 15px 20px;">
+                        <h5 style="margin: 0;"><i class="fas fa-user"></i> Thông tin cá nhân</h5>
+                    </div>
+                    <div class="card-body" style="padding: 20px;">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <p style="color: #999; margin: 0; font-size: 14px;">Tên đầu tiên</p>
+                                <p style="margin: 5px 0; font-weight: 500;" th:text="${session.currentCustomer.firstName ?: 'Chưa cập nhật'}"></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <p style="color: #999; margin: 0; font-size: 14px;">Tên cuối</p>
+                                <p style="margin: 5px 0; font-weight: 500;" th:text="${session.currentCustomer.lastName ?: 'Chưa cập nhật'}"></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <p style="color: #999; margin: 0; font-size: 14px;">Email</p>
+                                <p style="margin: 5px 0; font-weight: 500;" th:text="${session.currentCustomer.email}"></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <p style="color: #999; margin: 0; font-size: 14px;">Số điện thoại</p>
+                                <p style="margin: 5px 0; font-weight: 500;" th:text="${session.currentCustomer.phoneNumber ?: 'Chưa cập nhật'}"></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <p style="color: #999; margin: 0; font-size: 14px;">Địa chỉ</p>
+                                <p style="margin: 5px 0; font-weight: 500;" th:text="${session.currentCustomer.address ?: 'Chưa cập nhật'}"></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <p style="color: #999; margin: 0; font-size: 14px;">Thành phố</p>
+                                <p style="margin: 5px 0; font-weight: 500;" th:text="${session.currentCustomer.city ?: 'Chưa cập nhật'}"></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <p style="color: #999; margin: 0; font-size: 14px;">Quốc gia</p>
+                                <p style="margin: 5px 0; font-weight: 500;" th:text="${session.currentCustomer.country ?: 'Chưa cập nhật'}"></p>
+                            </div>
+                        </div>
+
+                        <a href="/account/edit" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Chỉnh sửa
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" style="background: #f8f9fa; padding: 15px 20px;">
+                        <h5 style="margin: 0;"><i class="fas fa-shopping-bag"></i> Đơn hàng gần đây</h5>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div th:if="${recentOrders.isEmpty()}" style="padding: 20px; text-align: center; color: #999;">
+                            <p><i class="fas fa-inbox"></i> Bạn chưa có đơn hàng nào</p>
+                            <a href="/" class="btn btn-sm btn-outline-primary">Tiếp tục mua sắm</a>
+                        </div>
+
+                        <div th:if="!${recentOrders.isEmpty()}" class="table-responsive">
+                            <table class="table" style="margin: 0;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid #e0e0e0;">
+                                        <th>Mã đơn hàng</th>
+                                        <th>Ngày đặt</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Trạng thái</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="order : ${recentOrders}" style="border-bottom: 1px solid #e0e0e0;">
+                                        <td style="font-weight: bold; color: #e74c3c;" th:text="${order.orderNumber}"></td>
+                                        <td th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                        <td th:text="${#numbers.formatCurrency(order.totalAmount)}"></td>
+                                        <td>
+                                            <span th:switch="${order.status}">
+                                                <span th:case="'PENDING'" class="badge bg-warning">Chờ xác nhận</span>
+                                                <span th:case="'CONFIRMED'" class="badge bg-info">Đã xác nhận</span>
+                                                <span th:case="'SHIPPING'" class="badge bg-primary">Đang giao</span>
+                                                <span th:case="'DELIVERED'" class="badge bg-success">Đã giao</span>
+                                                <span th:case="'CANCELLED'" class="badge bg-danger">Đã hủy</span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/layout :: footer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>
