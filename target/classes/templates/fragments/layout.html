@@ -3,126 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fragments - KTNShop</title>
+    <title>KTNShop - Thế Giới Gaming Gear</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<!-- HEADER FRAGMENT -->
-<div th:fragment="header" class="topbar">
-    <div class="topbar-content">
-        <div class="topbar-left">
-            <div class="topbar-item">
-                <i class="fas fa-phone"></i>
-                <span>Hotline: 1900 1234</span>
+<div th:fragment="header" class="header-wrapper">
+    <div class="topbar">
+        <div class="container topbar-content">
+            <div class="topbar-left">
+                <a href="tel:19001234" class="topbar-item"><i class="fas fa-phone-alt"></i> 1900 1234</a>
+                <span class="divider">|</span>
+                <a href="mailto:support@ktnshop.vn" class="topbar-item"><i class="fas fa-envelope"></i> support@ktnshop.vn</a>
             </div>
-            <div class="topbar-item">
-                <i class="fas fa-envelope"></i>
-                <span>Email: support@ktnshop.vn</span>
+            <div class="topbar-right">
+                <a href="#" class="topbar-item">Hệ thống cửa hàng</a>
+                <span class="divider">|</span>
+                <a href="#" class="topbar-item">Tra cứu đơn hàng</a>
             </div>
-        </div>
-        <div class="topbar-right">
-            <a href="/" class="topbar-item">
-                <i class="fas fa-home"></i>
-                <span>Trang chủ</span>
-            </a>
         </div>
     </div>
+
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="/" class="logo">
+                <span class="logo-icon"><i class="fas fa-gamepad"></i></span>
+                <div class="logo-text">
+                    <span class="brand">KTN</span><span class="suffix">Shop</span>
+                </div>
+            </a>
+            
+            <div class="search-section">
+                <form th:action="@{/products/search}" method="get" class="search-form">
+                    <input type="text" name="q" placeholder="Bạn đang tìm kiếm gì hôm nay?..." required>
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            
+            <div class="header-actions">
+                <div class="action-item" th:if="${session.currentUser}">
+                    <a href="/account" class="action-link">
+                        <i class="far fa-user"></i>
+                        <div class="action-info">
+                            <span class="small-label">Xin chào,</span>
+                            <span class="action-label" th:text="${session.currentUser.username}">User</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="action-item" th:if="!${session.currentUser}">
+                    <a href="/auth/login" class="action-link">
+                        <i class="far fa-user"></i>
+                        <div class="action-info">
+                            <span class="small-label">Tài khoản</span>
+                            <span class="action-label">Đăng nhập</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="action-item cart-item">
+                    <a href="/cart" class="action-link">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span class="badge-count" th:text="${session.currentCustomer?.cart?.cartItems?.size() ?: 0}">0</span>
+                        </div>
+                        <div class="action-info">
+                            <span class="small-label">Giỏ hàng</span>
+                            <span class="action-label">Của bạn</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar-main">
+        <div class="container">
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/" class="active"><i class="fas fa-home me-1"></i> Trang chủ</a></li>
+                <li class="nav-item"><a th:href="@{/category/pc-gaming}"><i class="fas fa-desktop me-1"></i> PC Gaming</a></li>
+                <li class="nav-item"><a th:href="@{/category/laptop-gaming}"><i class="fas fa-laptop me-1"></i> Laptop Gaming</a></li>
+                <li class="nav-item"><a th:href="@{/category/linh-kien}"><i class="fas fa-microchip me-1"></i> Linh kiện</a></li>
+                <li class="nav-item"><a th:href="@{/category/man-hinh}"><i class="fas fa-tv me-1"></i> Màn hình</a></li>
+                <li class="nav-item"><a th:href="@{/category/phu-kien-gaming}"><i class="fas fa-keyboard me-1"></i> Phụ kiện</a></li>
+                <li class="nav-item"><a th:href="@{/category/tai-nghe}"><i class="fas fa-headphones me-1"></i> Âm thanh</a></li>
+            </ul>
+        </div>
+    </nav>
 </div>
 
-<!-- MAIN HEADER -->
-<header>
-    <div class="header-container">
-        <div class="logo">
-            <i class="fas fa-gamepad"></i>
-            <a href="/" style="color: inherit; text-decoration: none;">KTNShop</a>
+<footer th:fragment="footer" class="modern-footer">
+    <div class="container">
+        <div class="footer-top">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-brand">
+                        <a href="/" class="text-decoration-none">
+                            <span class="logo-text">KTN<span class="highlight">Shop</span></span>
+                        </a>
+                        <p class="mt-3 text-white-50 pe-lg-4">
+                            Hệ thống bán lẻ PC & Gaming Gear chính hãng hàng đầu Việt Nam. Nơi thỏa mãn đam mê công nghệ của bạn với mức giá tốt nhất.
+                        </p>
+                    </div>
+                    <div class="mt-4">
+                        <h6 class="text-white mb-3 text-uppercase" style="font-size: 13px; letter-spacing: 1px;">Kết nối với chúng tôi</h6>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                            <a href="#"><i class="fab fa-tiktok"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-3 col-6 mb-4">
+                    <h5 class="footer-title">Hỗ trợ khách hàng</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">Chính sách bảo hành</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Kiểm tra đơn hàng</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-3 col-6 mb-4">
+                    <h5 class="footer-title">Về KTNShop</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Giới thiệu chung</a></li>
+                        <li><a href="#">Hệ thống cửa hàng</a></li>
+                        <li><a href="#">Tuyển dụng nhân tài</a></li>
+                        <li><a href="#">Tin tức công nghệ</a></li>
+                        <li><a href="#">Liên hệ hợp tác</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-12 mb-4">
+                    <h5 class="footer-title">Thông tin liên hệ</h5>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Trụ sở chính:</strong>
+                                <span class="d-block text-white-50">Số 123, Đường Cầu Giấy, Hà Nội</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <div>
+                                <strong>Tổng đài hỗ trợ (24/7):</strong>
+                                <a href="tel:19001234" class="d-block text-white fw-bold mt-1" style="font-size: 18px;">1900 1234</a>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email hỗ trợ:</strong>
+                                <a href="mailto:support@ktnshop.vn" class="text-white-50">support@ktnshop.vn</a>
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    <div class="payment-methods mt-4">
+                        <h6 class="text-white mb-3 text-uppercase" style="font-size: 13px; letter-spacing: 1px;">Phương thức thanh toán</h6>
+                        <div class="d-flex gap-2">
+                            <span class="bg-light rounded px-2 py-1"><i class="fab fa-cc-visa fa-2x text-primary"></i></span>
+                            <span class="bg-light rounded px-2 py-1"><i class="fab fa-cc-mastercard fa-2x text-danger"></i></span>
+                            <span class="bg-light rounded px-2 py-1"><i class="fab fa-cc-paypal fa-2x text-primary"></i></span>
+                            <span class="bg-light rounded px-2 py-1"><i class="fas fa-money-bill-wave fa-2x text-success"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <div class="search-bar">
-            <form th:action="@{/products/search}" method="get" style="display: flex; flex: 1;">
-                <input type="text" name="q" placeholder="Tìm kiếm sản phẩm..." required>
-                <button class="search-btn" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
-        </div>
-        
-        <div class="header-icons">
-            <div class="header-icon">
-                <i class="fas fa-phone-alt"></i>
-                <span class="icon-label">Hotline</span>
-            </div>
-            <a th:if="${session.currentUser}" href="/account" class="header-icon" style="text-decoration: none; color: inherit;">
-                <i class="fas fa-user"></i>
-                <span class="icon-label" th:text="${session.currentUser.username}"></span>
-            </a>
-            <a th:if="!${session.currentUser}" href="/auth/login" class="header-icon" style="text-decoration: none; color: inherit;">
-                <i class="fas fa-user"></i>
-                <span class="icon-label">Đăng nhập</span>
-            </a>
-            <a href="/cart" class="header-icon" style="text-decoration: none; color: inherit;">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="icon-label">Giỏ hàng</span>
-                <span class="icon-badge" th:text="${session.currentCustomer?.cart?.cartItems?.size() ?: 0}">0</span>
-            </a>
-        </div>
-    </div>
-</header>
-
-<!-- NAVIGATION -->
-<nav class="navbar">
-    <ul class="navbar-container">
-        <li class="nav-item"><a href="/" class="active"><i class="fas fa-home"></i> Trang chủ</a></li>
-        <li class="nav-item"><a th:href="@{/category/pc-gaming}"><i class="fas fa-desktop"></i> PC Gaming</a></li>
-        <li class="nav-item"><a th:href="@{/category/laptop-gaming}"><i class="fas fa-laptop"></i> Laptop Gaming</a></li>
-        <li class="nav-item"><a th:href="@{/category/linh-kien}"><i class="fas fa-microchip"></i> Linh kiện</a></li>
-        <li class="nav-item"><a th:href="@{/category/man-hinh}"><i class="fas fa-tv"></i> Màn hình</a></li>
-        <li class="nav-item"><a th:href="@{/category/phu-kien-gaming}"><i class="fas fa-keyboard"></i> Phụ kiện</a></li>
-        <li class="nav-item"><a th:href="@{/category/tai-nghe}"><i class="fas fa-headphones"></i> Tai nghe</a></li>
-    </ul>
-</nav>
-
-<!-- FOOTER FRAGMENT -->
-<footer th:fragment="footer">
-    <div class="footer-container">
-        <div class="footer-grid">
-            <div class="footer-column">
-                <h4>Về KTNShop</h4>
-                <ul>
-                    <li><a href="#">Giới thiệu</a></li>
-                    <li><a href="#">Tuyển dụng</a></li>
-                    <li><a href="#">Hệ thống cửa hàng</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Danh mục</h4>
-                <ul>
-                    <li><a th:href="@{/category/pc-gaming}">PC Gaming</a></li>
-                    <li><a th:href="@{/category/laptop-gaming}">Laptop Gaming</a></li>
-                    <li><a th:href="@{/category/linh-kien}">Linh kiện</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Chính sách</h4>
-                <ul>
-                    <li><a href="#">Bảo hành</a></li>
-                    <li><a href="#">Đổi trả</a></li>
-                    <li><a href="#">Vận chuyển</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Liên hệ</h4>
-                <ul>
-                    <li><a href="tel:1900-1234">Hotline: 1900 1234</a></li>
-                    <li><a href="mailto:support@ktnshop.vn">Email: support@ktnshop.vn</a></li>
-                </ul>
+        <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center">
+            <p class="mb-0 text-white-50">© 2025 <strong>KTNShop</strong>. All rights reserved.</p>
+            <div class="d-none d-md-block">
+                <span class="text-white-50 me-3" style="font-size: 13px;">Designed by KTN Team</span>
             </div>
         </div>
-        <div class="footer-copyright">© 2025 KTNShop. All rights reserved.</div>
     </div>
 </footer>
-
 </body>
 </html>
