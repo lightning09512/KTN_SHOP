@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class KTNShopApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(KTNShopApplication.class, args);
+        SpringApplication.run(KTNShopApplication.class, args);                                              
     }
 }
+     

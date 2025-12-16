@@ -2,6 +2,8 @@ package com.ktnshop.ecommerce.controller;
 
 import com.ktnshop.ecommerce.model.Product;
 import com.ktnshop.ecommerce.model.Category;
+import com.ktnshop.ecommerce.model.Customer;
+import com.ktnshop.ecommerce.model.Cart;
 import com.ktnshop.ecommerce.service.ProductService;
 import com.ktnshop.ecommerce.service.CategoryService;
 import org.springframework.data.domain.Page;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -52,12 +55,22 @@ public class ProductController {
     }
 
     @GetMapping("/{slug}")
-    public String getProductBySlug(@PathVariable String slug, Model model) {
+    public String getProductBySlug(@PathVariable String slug, Model model, HttpSession session) {
         Product product = productService.getProductBySlug(slug)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
         
         model.addAttribute("product", product);
         model.addAttribute("categories", categoryService.getAllCategories());
+        
+        // Thêm dữ liệu cho cart counter
+        Customer customer = (Customer) session.getAttribute("currentCustomer");
+        if (customer != null) {
+            Cart cart = customer.getCart();
+            if (cart != null && cart.getCartItems() != null) {
+                model.addAttribute("cartCount", cart.getCartItems().size());
+            }
+        }
+        
         return "product-detail";
     }
 

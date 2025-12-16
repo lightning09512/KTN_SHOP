@@ -12,10 +12,11 @@
     <div th:replace="fragments/layout :: header"></div>
 
     <div class="container-fluid" style="padding: 20px; max-width: 1200px;">
-        <h2 style="margin-bottom: 30px;">Thanh toán</h2>
+        <h2 style="margin-bottom: 30px;">💳 Thanh toán</h2>
 
-        <div th:if="${error}" class="alert alert-danger">
-            <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
         <div class="row">
@@ -23,32 +24,35 @@
                 <div class="card" style="padding: 30px; margin-bottom: 20px;">
                     <h4 style="margin-bottom: 20px;">Thông tin giao hàng</h4>
                     
-                    <form th:action="@{/orders/create}" method="post">
+                    <form th:action="@{/orders/place}" method="post" novalidate>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Họ và tên</label>
-                                <input type="text" class="form-control" th:value="${customer.fullName}" disabled>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" th:value="${customer.email}" disabled>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="fullName" 
+                                       th:value="${customer.firstName} + ' ' + ${customer.lastName}" 
+                                       placeholder="Nhập họ và tên" required>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Số điện thoại</label>
-                                <input type="text" class="form-control" th:value="${customer.phone}" disabled>
+                                <label class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" name="email" 
+                                       th:value="${customer.email}" 
+                                       placeholder="Nhập email" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Địa chỉ</label>
-                                <input type="text" class="form-control" th:value="${customer.address}" disabled>
+                                <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" name="phone" 
+                                       th:value="${customer.phoneNumber}" 
+                                       placeholder="Nhập số điện thoại" required>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Địa chỉ giao hàng*</label>
-                            <textarea class="form-control" name="shippingAddress" rows="3" placeholder="Nhập địa chỉ giao hàng chi tiết" required></textarea>
+                            <label class="form-label">Địa chỉ giao hàng <span class="text-danger">*</span></label>
+                            <textarea class="form-control" name="shippingAddress" rows="3" 
+                                    placeholder="Nhập địa chỉ giao hàng chi tiết" required></textarea>
                         </div>
 
                         <div class="mb-3">
@@ -79,7 +83,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-danger" style="width: 100%; padding: 12px; font-size: 16px;">
-                            <i class="fas fa-check"></i> Xác nhận đơn hàng
+                            <i class="fas fa-check"></i> Xác nhận đặt hàng
                         </button>
                     </form>
                 </div>
@@ -91,19 +95,19 @@
                     <hr>
 
                     <div style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
-                        <div th:each="item : ${session.currentCustomer.cart.cartItems}" style="display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                        <div th:each="item : ${cart.cartItems}" style="display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
                             <div>
                                 <p style="margin: 0; font-weight: 500;" th:text="${item.product.name}"></p>
                                 <small style="color: #999;" th:text="${'x' + item.quantity}"></small>
                             </div>
-                            <strong th:text="${#numbers.formatCurrency(item.subtotal)}"></strong>
+                            <strong th:text="'₫ ' + ${#numbers.formatDecimal(item.unitPrice * item.quantity, 0, 'COMMA')}"></strong>
                         </div>
                     </div>
 
                     <hr>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                         <span>Tạm tính:</span>
-                        <strong th:text="${#numbers.formatCurrency(session.currentCustomer.cart.totalPrice)}"></strong>
+                        <strong th:text="'₫ ' + ${#numbers.formatDecimal(totalPrice, 0, 'COMMA')}"></strong>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                         <span>Vận chuyển:</span>
@@ -111,7 +115,7 @@
                     </div>
                     <div style="display: flex; justify-content: space-between; padding-top: 15px; border-top: 2px solid #eee; font-size: 18px;">
                         <strong>Tổng cộng:</strong>
-                        <strong style="color: #e74c3c;" th:text="${#numbers.formatCurrency(session.currentCustomer.cart.totalPrice)}"></strong>
+                        <strong style="color: #e74c3c;" th:text="'₫ ' + ${#numbers.formatDecimal(totalPrice, 0, 'COMMA')}"></strong>
                     </div>
 
                     <a href="/cart" class="btn btn-outline-secondary w-100 mt-3">

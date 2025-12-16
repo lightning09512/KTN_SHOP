@@ -1,11 +1,8 @@
-com\ktnshop\ecommerce\controller\ProductController.class
-com\ktnshop\ecommerce\controller\CartController.class
 com\ktnshop\ecommerce\repository\CartItemRepository.class
 com\ktnshop\ecommerce\model\Product.class
 com\ktnshop\ecommerce\repository\CategoryRepository.class
 com\ktnshop\ecommerce\repository\CustomerRepository.class
 com\ktnshop\ecommerce\config\SecurityConfig$1.class
-com\ktnshop\ecommerce\model\OrderItem.class
 com\ktnshop\ecommerce\controller\AccountController.class
 com\ktnshop\ecommerce\model\Category.class
 com\ktnshop\ecommerce\model\User.class
@@ -33,6 +30,5 @@ com\ktnshop\ecommerce\repository\OrderRepository.class
 com\ktnshop\ecommerce\model\Cart.class
 com\ktnshop\ecommerce\model\Payment$PaymentStatus.class
 com\ktnshop\ecommerce\service\OrderService.class
-com\ktnshop\ecommerce\controller\OrderController.class
 com\ktnshop\ecommerce\repository\CartRepository.class
 com\ktnshop\ecommerce\controller\HomeController.class

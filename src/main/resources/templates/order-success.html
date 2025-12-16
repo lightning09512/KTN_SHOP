@@ -26,7 +26,7 @@
             <div style="background: #f8f9fa; padding: 20px; border-radius: 4px; margin-bottom: 20px; text-align: left;">
                 <p style="margin: 10px 0;"><strong>Mã đơn hàng:</strong> <span th:text="${order.orderNumber}" style="color: #e74c3c; font-weight: bold;"></span></p>
                 <p style="margin: 10px 0;"><strong>Ngày đặt:</strong> <span th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
-                <p style="margin: 10px 0;"><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatCurrency(order.totalAmount)}" style="color: #e74c3c; font-weight: bold;"></span></p>
+                <p style="margin: 10px 0;"><strong>Tổng tiền:</strong> <span th:text="'₫ ' + ${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA')}" style="color: #e74c3c; font-weight: bold;"></span></p>
                 <p style="margin: 10px 0;"><strong>Trạng thái:</strong> <span class="badge bg-warning" th:text="${order.status}"></span></p>
                 <p style="margin: 10px 0;"><strong>Địa chỉ giao:</strong> <span th:text="${order.shippingAddress}"></span></p>
             </div>
@@ -67,13 +67,13 @@
                 <tbody>
                     <tr th:each="item : ${order.orderItems}">
                         <td style="text-align: left;" th:text="${item.product.name}"></td>
-                        <td th:text="${#numbers.formatCurrency(item.unitPrice)}"></td>
+                        <td th:text="'₫ ' + ${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA')}"></td>
                         <td th:text="${item.quantity}"></td>
-                        <td style="font-weight: bold;" th:text="${#numbers.formatCurrency(item.subtotal)}"></td>
+                        <td style="font-weight: bold;" th:text="'₫ ' + ${#numbers.formatDecimal(item.unitPrice * item.quantity, 0, 'COMMA')}"></td>
                     </tr>
                     <tr style="font-weight: bold; background-color: #f8f9fa;">
                         <td colspan="3" style="text-align: right;">Tổng cộng:</td>
-                        <td style="color: #e74c3c;" th:text="${#numbers.formatCurrency(order.totalAmount)}"></td>
+                        <td style="color: #e74c3c;" th:text="'₫ ' + ${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA')}"></td>
                     </tr>
                 </tbody>
             </table>

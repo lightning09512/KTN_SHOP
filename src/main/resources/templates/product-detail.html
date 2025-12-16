@@ -41,8 +41,8 @@
                 <h1 class="detail-title" th:text="${product.name}"></h1>
 
                 <div class="detail-price-section">
-                    <span class="detail-price-old" th:text="${product.originalPrice}"></span>
-                    <span class="detail-price-new" th:text="${product.sellingPrice}"></span>
+                    <span class="detail-price-old" th:text="'₫ ' + ${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA')}"></span>
+                    <span class="detail-price-new" th:text="'₫ ' + ${#numbers.formatDecimal(product.sellingPrice, 0, 'COMMA')}"></span>
                 </div>
 
                 <!-- Quantity Control -->
@@ -57,9 +57,13 @@
 
                 <!-- Action Buttons -->
                 <div class="detail-action-buttons" style="display: flex; gap: 10px;">
-                    <button type="button" class="btn btn-outline-danger btn-lg flex-fill" onclick="addToCart()">
-                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
-                    </button>
+                    <form th:action="@{/cart/add}" method="post" class="flex-fill">
+                        <input type="hidden" name="productId" th:value="${product.id}">
+                        <input type="hidden" id="quantityHidden" name="quantity" value="1">
+                        <button type="submit" class="btn btn-outline-danger btn-lg w-100" onclick="document.getElementById('quantityHidden').value = document.getElementById('quantityInput').value;">
+                            <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                        </button>
+                    </form>
                     <button type="button" class="btn btn-danger btn-lg flex-fill" onclick="buyNow()">
                         <i class="fas fa-flash"></i> Mua ngay
                     </button>
@@ -76,11 +80,11 @@
                             </tr>
                             <tr>
                                 <th>Giá gốc</th>
-                                <td th:text="${product.originalPrice}"></td>
+                                <td th:text="'₫ ' + ${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA')}"></td>
                             </tr>
                             <tr>
                                 <th>Giá bán</th>
-                                <td th:text="${product.sellingPrice}"></td>
+                                <td th:text="'₫ ' + ${#numbers.formatDecimal(product.sellingPrice, 0, 'COMMA')}"></td>
                             </tr>
                             <tr>
                                 <th>Tồn kho</th>
